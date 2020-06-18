@@ -22,7 +22,7 @@ class TextDataset(Dataset):
     def __init__(
         self, tokenizer: PreTrainedTokenizer, file_path: str, block_size: int, overwrite_cache=False,
     ):
-        assert os.path.isfile(file_path)
+        assert os.path.isabs(file_path)
 
         block_size = block_size - tokenizer.num_special_tokens_to_add(pair=False)
 
@@ -99,3 +99,47 @@ class LineByLineTextDataset(Dataset):
 
     def __getitem__(self, i) -> torch.Tensor:
         return torch.tensor(self.examples[i], dtype=torch.long)
+
+
+class LineByLineTextDatasetAVSD(Dataset):
+    """
+    This will be superseded by a framework-agnostic approach
+    soon.
+    """
+
+    def __init__(self, tokenizer: PreTrainedTokenizer, file_path: str, block_size: int):
+        assert os.path.isfile(file_path)
+        # Here, we do not cache the features, operating under the assumption
+        # that we will soon use fast multithreaded tokenizers from the
+        # `tokenizers` repo everywhere =)
+        logger.info("Creating features from dataset file at %s", file_path)
+
+        with open(file_path, encoding="utf-8") as f:
+
+            lines = [line for line in f.read().splitlines() if (len(line) > 0 and not line.isspace())]
+            nsp_labels = list(map(lambda l: l[l.index('[nsp_label]') + 11:l.index('[nsp_label]') + 12], lines))
+            seg_Bs = list(map(lambda l: l[l.index('[seg_b]') + 7:l.index('[nsp_label]') - 1], lines))
+            seg_As = list(map(lambda l: l[l.index('[seg_a]') + 7:l.index('[seg_b]') - 1], lines))
+            vid_ids = list(map(lambda l: l[l.index('[vidId]')+7:], lines))
+
+        batch_encoding = tokenizer.batch_encode_plus([(a,b) for (a,b) in zip(seg_As, seg_Bs)],
+                                                     add_special_tokens=True,
+                                                     max_length=100,
+                                                     pad_to_max_length=True)
+        examples = {
+                'data': batch_encoding,
+                'next_sentence_labels': nsp_labels,
+        }
+        self.examples = examples
+
+    def __len__(self):
+        return len(self.examples['next_sentence_labels'])
+
+    def __getitem__(self, i) -> torch.Tensor:
+
+        examples = [ self.examples['data']['input_ids'][i],
+                     self.examples['data']['attention_mask'][i],
+                     self.examples['data']['token_type_ids'][i],
+                     self.examples['next_sentence_labels'][i]]
+
+        return examples

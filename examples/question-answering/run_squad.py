@@ -29,6 +29,10 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from torch.utils.data.distributed import DistributedSampler
 from tqdm import tqdm, trange
 
+cmd = 'export SQUAD_DIR=/home/halamri/summer2020/SQUAD/'
+os.system(cmd)
+
+
 from transformers import (
     MODEL_FOR_QUESTION_ANSWERING_MAPPING,
     WEIGHTS_NAME,

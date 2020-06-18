@@ -1,0 +1,35 @@
+{
+    "root": "/home/halamri/transformers",
+    "program": "/home/halamri/transformers/examples/language-modeling/run_language_modeling_2.py",
+    "git": {
+        "remote": "https://github.com/huggingface/transformers.git",
+        "commit": "9c17256447b91cf8483c856cb15e95ed30ace538"
+    },
+    "email": "halamri3@gatech.edu",
+    "startedAt": "2020-06-14T15:51:46.310221",
+    "host": "halamri-System-Product-Name",
+    "username": "halamri",
+    "executable": "/home/halamri/anaconda3/envs/summer2020/bin/python",
+    "os": "Linux-4.4.0-179-generic-x86_64-with-debian-stretch-sid",
+    "python": "3.7.7",
+    "gpu": "TITAN X (Pascal)",
+    "gpu_count": 1,
+    "cpu_count": 8,
+    "args": [
+        "--output_dir=/home/halamri/summer2020/avsd-transofrmers/mlmAVSD/",
+        "--model_type=bert",
+        "--model_name_or_path=/home/halamri/summer2020/avsd-transofrmers/mlmAVSD/",
+        "--mlm",
+        "--do_eval",
+        "--eval_data_file=/home/halamri/summer2020/avsdDatatextOptions_June13.txt",
+        "--overwrite_output_dir",
+        "--line_by_line",
+        "--num_train_epochs=10"
+    ],
+    "state": "killed",
+    "jobType": null,
+    "mode": "run",
+    "project": "huggingface",
+    "heartbeatAt": "2020-06-14T19:30:09.833373",
+    "exitcode": 255
+}
