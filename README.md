@@ -63,7 +63,7 @@ Choose the right framework for every part of a model's lifetime
 
 ## Installation
 
-This repo is tested on Python 3.6+, PyTorch 1.0.0+ and TensorFlow 2.0.
+This repo is tested on Python 3.6+, PyTorch 1.0.0+ (PyTorch 1.3.1+ for examples) and TensorFlow 2.0.
 
 You should install 🤗 Transformers in a [virtual environment](https://docs.python.org/3/library/venv.html). If you're unfamiliar with Python virtual environments, check out the [user guide](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
 
@@ -538,20 +538,21 @@ You can create `Pipeline` objects for the following down-stream tasks:
  - `translation_xx_to_yy`
 
 ```python
-from transformers import pipeline
+>>> from transformers import pipeline
 
 # Allocate a pipeline for sentiment-analysis
-nlp = pipeline('sentiment-analysis')
-nlp('We are very happy to include pipeline into the transformers repository.')
->>> {'label': 'POSITIVE', 'score': 0.99893874}
+>>> nlp = pipeline('sentiment-analysis')
+>>> nlp('We are very happy to include pipeline into the transformers repository.')
+[{'label': 'POSITIVE', 'score': 0.9978193640708923}]
 
 # Allocate a pipeline for question-answering
-nlp = pipeline('question-answering')
-nlp({
-    'question': 'What is the name of the repository ?',
-    'context': 'Pipeline have been included in the huggingface/transformers repository'
-})
->>> {'score': 0.28756016668193496, 'start': 35, 'end': 59, 'answer': 'huggingface/transformers'}
+>>> nlp = pipeline('question-answering')
+>>> nlp({
+...     'question': 'What is the name of the repository ?',
+...     'context': 'Pipeline have been included in the huggingface/transformers repository'
+... })
+{'score': 0.5135612454720828, 'start': 35, 'end': 59, 'answer': 'huggingface/transformers'}
+
 ```
 
 ## Migrating from pytorch-transformers to transformers
